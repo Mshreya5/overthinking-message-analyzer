@@ -176,6 +176,73 @@ export default function Home() {
     { text: 'Panic Mode', emoji: '😱' }
   ]
 
+  // Generate dynamic interpretations based on message characteristics
+  const generateDynamicInterpretations = (msg) => {
+    const lowerMsg = msg.toLowerCase().trim()
+    const interpretations = []
+    
+    // Analyze message characteristics
+    const hasExclamation = msg.includes('!')
+    const hasQuestion = msg.includes('?')
+    const hasEllipsis = msg.includes('...')
+    const isAllCaps = msg === msg.toUpperCase() && msg !== msg.toLowerCase()
+    const hasEmoji = /[\u{1F300}-\u{1F9FF}]/u.test(msg)
+    const wordCount = msg.trim().split(/\s+/).length
+    const hasPunctuation = /[.,!?;:]/.test(msg)
+    
+    // Generate contextual interpretations
+    if (hasExclamation) {
+      interpretations.push(`The exclamation mark in "${msg}" could mean excitement... or sarcasm`)
+      interpretations.push(`They're either really happy or really angry about "${msg}"`)
+    }
+    
+    if (hasQuestion) {
+      interpretations.push(`"${msg}" - Are they genuinely asking or being rhetorical?`)
+      interpretations.push(`This question might be a test to see if you're paying attention`)
+    }
+    
+    if (hasEllipsis) {
+      interpretations.push(`Those dots in "${msg}" mean they're holding something back`)
+      interpretations.push(`The ellipsis suggests there's more they're not saying`)
+    }
+    
+    if (isAllCaps) {
+      interpretations.push(`ALL CAPS "${msg}" = they're either yelling or their caps lock is stuck`)
+      interpretations.push(`The intensity of "${msg}" in caps is concerning`)
+    }
+    
+    if (hasEmoji) {
+      interpretations.push(`The emoji in "${msg}" might be masking their true feelings`)
+      interpretations.push(`Are they using emojis to soften a harsh message?`)
+    }
+    
+    if (wordCount === 1) {
+      interpretations.push(`One word "${msg}" = minimal effort or maximum passive-aggression`)
+      interpretations.push(`They couldn't spare more than one word for "${msg}"?`)
+    }
+    
+    if (wordCount > 5) {
+      interpretations.push(`"${msg}" is suspiciously detailed - what are they overcompensating for?`)
+      interpretations.push(`The length of "${msg}" suggests they're overthinking too`)
+    }
+    
+    if (!hasPunctuation && wordCount > 1) {
+      interpretations.push(`No punctuation in "${msg}" - they're too casual or too rushed?`)
+      interpretations.push(`The lack of punctuation suggests they're distracted`)
+    }
+    
+    // Add message-specific interpretations
+    interpretations.push(`"${msg}" could mean exactly what it says (unlikely)`)
+    interpretations.push(`The timing of "${msg}" is suspicious`)
+    interpretations.push(`"${msg}" - they're definitely thinking something else`)
+    interpretations.push(`What they really mean by "${msg}" is anyone's guess`)
+    interpretations.push(`"${msg}" has layers you haven't even discovered yet`)
+    interpretations.push(`The subtext of "${msg}" requires a PhD to decode`)
+    
+    // Shuffle and return 4 unique interpretations
+    return [...new Set(interpretations)].sort(() => Math.random() - 0.5).slice(0, 4)
+  }
+
   // Main analysis function - triggered when user clicks analyze
   const analyze = () => {
     // Don't analyze empty messages
@@ -203,20 +270,21 @@ export default function Home() {
         selectedInterpretations = shuffled.slice(0, 4)
         levelIndex = data.defaultLevel
       } else {
-        // Unknown message - use generic interpretations
-        const genericInterpretations = [
-          'They\'re being cryptic on purpose',
-          'Hidden meaning detected',
-          'They expect you to read between the lines',
-          'Tone is impossible to determine',
-          'Could mean literally anything',
-          'Context is everything (and you have none)',
-          'They\'re testing your interpretation skills',
-          'Ambiguity level: Maximum'
-        ]
-        const shuffled = [...genericInterpretations].sort(() => Math.random() - 0.5)
-        selectedInterpretations = shuffled.slice(0, 4)
-        levelIndex = Math.floor(Math.random() * levels.length)
+        // Unknown message - generate dynamic interpretations
+        selectedInterpretations = generateDynamicInterpretations(message)
+        
+        // Calculate level based on message characteristics
+        const hasExclamation = message.includes('!')
+        const hasQuestion = message.includes('?')
+        const hasEllipsis = message.includes('...')
+        const isAllCaps = message === message.toUpperCase() && message !== message.toLowerCase()
+        const wordCount = message.trim().split(/\s+/).length
+        
+        // Determine overthinking level
+        if (isAllCaps || hasEllipsis) levelIndex = 3
+        else if (hasExclamation || wordCount === 1) levelIndex = 2
+        else if (hasQuestion || wordCount > 5) levelIndex = 1
+        else levelIndex = 1
       }
 
       // Add some randomness to the level (30% chance to increase by 1)
