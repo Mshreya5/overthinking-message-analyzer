@@ -180,14 +180,14 @@ The application includes 14 pre-programmed message patterns:
 This project is optimized for **Vercel** deployment:
 
 1. Push code to GitHub
-2. Go to [vercel.com](https://vercel.com)
+2. Go to [vercel.com](overthinking-message-analyzer.vercel.app)
 3. Import your repository
 4. Click Deploy
 5. Done!
 
 ## Repository
 
-**GitHub**: [github.com/shreya/overthinking-message-analyzer](https://github.com/shreya/overthinking-message-analyzer)
+**GitHub**:(https://github.com/Mshreya5/overthinking-message-analyzer.git)
 
 Feel free to fork, star, or contribute to this project!
 
