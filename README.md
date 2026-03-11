@@ -2,8 +2,6 @@
 
 > **A creative web application that humorously demonstrates the universal experience of overthinking short digital messages.**
 
-**GitHub Repository**: [github.com/shreya/overthinking-message-analyzer](https://github.com/shreya/overthinking-message-analyzer)
-
 ## Project Overview
 
 In today's digital age, we've all been there: receiving a simple "ok" or "fine" and spending the next hour analyzing what it *really* means. This application brings humor and self-awareness to this universal experience by providing a satirical "analysis" of short messages with possible interpretations and an overthinking level meter.
