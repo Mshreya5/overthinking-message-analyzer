@@ -1,0 +1,588 @@
+/* ============================================
+   OVERTHINKING MESSAGE ANALYZER - STYLES
+   ============================================
+   
+   This stylesheet contains all the styling for the application.
+   It's organized into logical sections for easy navigation.
+   
+   Color Scheme:
+   - Primary: Teal (#4ecdc4) - Main accent color
+   - Secondary: Red (#ff6b6b) - Highlights and accents
+   - Background: Dark Blue (#1a1a2e) - Main background
+   - Cards: Dark Navy (#0f1624) - Card backgrounds
+   - Text: White with varying opacity
+   
+   ============================================ */
+
+/* ============================================
+   RESET & BASE STYLES
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: #1a1a2e;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+main {
+  width: 100%;
+  max-width: 700px;
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  text-align: center;
+}
+
+/* ============================================
+   HEADER SECTION
+   ============================================ */
+
+.header-section {
+  margin-bottom: 2.5rem;
+  animation: fadeInDown 0.8s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+h1 {
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+  color: #4ecdc4;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.description {
+  color: #b8b9d4;
+  margin-bottom: 0;
+  line-height: 1.7;
+  font-size: 1.05rem;
+}
+
+/* ============================================
+   INPUT SECTION
+   ============================================ */
+
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Input field styling */
+input {
+  padding: 1.2rem 1.5rem;
+  font-size: 1.05rem;
+  border: 2px solid #2d3561;
+  border-radius: 12px;
+  background: #0f1624;
+  color: #fff;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Input focus state - highlight with teal border */
+input:focus {
+  border-color: #4ecdc4;
+  box-shadow: 0 4px 30px rgba(78, 205, 196, 0.3);
+  transform: translateY(-2px);
+}
+
+input::placeholder {
+  color: #7c7d9c;
+}
+
+input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   BUTTON STYLES
+   ============================================ */
+
+button {
+  padding: 1.2rem 2.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  background: #4ecdc4;
+  color: #1a1a2e;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(78, 205, 196, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer effect on button hover */
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: left 0.5s;
+}
+
+button:hover::before {
+  left: 100%;
+}
+
+/* Button hover state - lift up and increase shadow */
+button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(78, 205, 196, 0.5);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Analyzing state - pulse animation */
+.analyzing {
+  background: #4ecdc4;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(26, 26, 46, 0.3);
+  border-top-color: #1a1a2e;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   EXAMPLES SECTION
+   ============================================ */
+
+.examples {
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.examples p {
+  color: #9c9db8;
+  margin-bottom: 0.8rem;
+  font-size: 0.95rem;
+}
+
+.example-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+}
+
+/* Example button styling */
+.example-btn {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  background: #2d3561;
+  border: 1px solid #4ecdc4;
+  color: #4ecdc4;
+  box-shadow: none;
+  transition: all 0.3s ease;
+}
+
+.example-btn:hover:not(:disabled) {
+  background: #4ecdc4;
+  color: #1a1a2e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+/* ============================================
+   RESULT CARD SECTION
+   ============================================ */
+
+.result-card {
+  background: #0f1624;
+  border: 2px solid #2d3561;
+  border-radius: 16px;
+  padding: 2.5rem;
+  animation: scaleIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  text-align: left;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  margin-bottom: 2rem;
+}
+
+/* Scale-in animation for result card */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #2d3561;
+}
+
+.result-card h2 {
+  color: #4ecdc4;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+/* ============================================
+   MESSAGE DISPLAY
+   ============================================ */
+
+.message-display {
+  background: #1a1a2e;
+  padding: 1.2rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #4ecdc4;
+  animation: slideInLeft 0.5s ease-out 0.2s both;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.message-text {
+  color: #ff6b6b;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  font-size: 1.1rem;
+}
+
+/* ============================================
+   INTERPRETATIONS SECTION
+   ============================================ */
+
+.interpretations h3,
+.level h3 {
+  color: #4ecdc4;
+  margin-bottom: 1rem;
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.interpretations {
+  margin-bottom: 1.5rem;
+}
+
+.interpretations ul {
+  list-style: none;
+}
+
+/* Individual interpretation item */
+.interpretations li {
+  background: #1a1a2e;
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.7rem;
+  border-radius: 12px;
+  border-left: 3px solid #4ecdc4;
+  animation: slideInRight 0.5s ease-out both;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.interpretations li:hover {
+  background: #2d3561;
+  transform: translateX(5px);
+}
+
+.bullet {
+  color: #ff6b6b;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.level {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 2.5rem;
+  border-radius: 12px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 1rem 0;
+  animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s both;
+  transition: transform 0.3s ease;
+  background: #2d3561;
+  color: #4ecdc4;
+  border: 2px solid #4ecdc4;
+}
+
+/* Floating emoji animation */
+.level-emoji {
+  font-size: 2rem;
+  animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* ============================================
+   ADVICE SECTION
+   ============================================ */
+
+.advice {
+  background: #2d3561;
+  border: 1px solid #4ecdc4;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.5s ease-out 0.6s both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.advice p {
+  margin: 0;
+  color: #e0e1f5;
+  line-height: 1.6;
+}
+
+/* ============================================
+   RESET BUTTON
+   ============================================ */
+
+.reset-btn {
+  width: 100%;
+  background: #2d3561;
+  color: #4ecdc4;
+  border: 2px solid #4ecdc4;
+  box-shadow: none;
+}
+
+.reset-btn:hover {
+  background: #4ecdc4;
+  color: #1a1a2e;
+}
+
+/* ============================================
+   HISTORY SECTION
+   ============================================ */
+
+.history-section {
+  background: #0f1624;
+  border: 2px solid #2d3561;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.history-section h3 {
+  color: #4ecdc4;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  background: #1a1a2e;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.history-item:hover {
+  background: #2d3561;
+  transform: translateX(5px);
+}
+
+.history-message {
+  color: #ff6b6b;
+  font-weight: 500;
+}
+
+.history-level {
+  color: #9c9db8;
+  font-size: 0.85rem;
+  background: #2d3561;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+}
+
+/* ============================================
+   FOOTER SECTION
+   ============================================ */
+
+.footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #0f1624;
+  border-radius: 12px;
+  border: 1px solid #2d3561;
+  animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+.footer p {
+  color: #7c7d9c;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 2.2rem;
+  }
+  
+  .result-card {
+    padding: 1.8rem;
+  }
+
+  .result-header {
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: flex-start;
+  }
+
+  .level-badge {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+  }
+
+  .example-buttons {
+    gap: 0.5rem;
+  }
+
+  .example-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .history-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
