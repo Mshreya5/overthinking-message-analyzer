@@ -1,327 +1,119 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Home() {
-  // State management for user input and results
   const [message, setMessage] = useState('')
   const [result, setResult] = useState(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [history, setHistory] = useState([])
+  const [stats, setStats] = useState({ total: 0, panic: 0 })
+  const [tipIndex, setTipIndex] = useState(0)
 
-  // Database of real messages with their interpretations
-  // Each message has unique interpretations based on how people actually use them
-  const messageDatabase = {
-    'ok': {
-      interpretations: [
-        'They\'re definitely not okay with this',
-        'Passive-aggressive agreement detected',
-        'They\'re busy and can\'t talk right now',
-        'They\'re upset but don\'t want to argue',
-        'Genuine agreement (rare case)',
-        'They\'re multitasking and barely reading'
-      ],
-      defaultLevel: 2
-    },
-    'k': {
-      interpretations: [
-        'Maximum passive-aggressiveness achieved',
-        'They\'re furious but keeping it short',
-        'You\'re in trouble and don\'t even know it',
-        'They saved 1 letter = they saved 1% of caring',
-        'Conversation officially over',
-        'They\'re driving and shouldn\'t be texting'
-      ],
-      defaultLevel: 3
-    },
-    'fine': {
-      interpretations: [
-        'Nothing is fine. Everything is on fire.',
-        'They\'re holding back a 10-paragraph rant',
-        'You should probably apologize (for something)',
-        'They\'re testing if you\'ll dig deeper',
-        'Sarcasm level: Maximum',
-        'They genuinely mean it (0.01% chance)'
-      ],
-      defaultLevel: 3
-    },
-    'sure': {
-      interpretations: [
-        'They don\'t actually want to do this',
-        'Reluctant agreement with hidden resentment',
-        'They\'re being polite but internally screaming',
-        'They forgot what you asked and are playing along',
-        'Genuine enthusiasm (check for fever)',
-        'They\'re saying yes now, complaining later'
-      ],
-      defaultLevel: 2
-    },
-    'lol': {
-      interpretations: [
-        'They didn\'t actually laugh',
-        'Awkward conversation filler',
-        'They have no idea how to respond',
-        'Pity laugh in text form',
-        'They\'re ending this conversation politely',
-        'Genuine amusement (rare specimen)'
-      ],
-      defaultLevel: 1
-    },
-    'haha': {
-      interpretations: [
-        'Fake laugh, real awkwardness',
-        'They\'re being polite but not amused',
-        'Conversation life support activated',
-        'They laughed 0.2 seconds ago, now it\'s gone',
-        'Sympathy laugh detected',
-        'They\'re actually smiling (maybe)'
-      ],
-      defaultLevel: 1
-    },
-    'yeah': {
-      interpretations: [
-        'Unenthusiastic agreement',
-        'They\'re distracted by something better',
-        'Minimal effort response unlocked',
-        'They agree but don\'t care',
-        'Auto-pilot mode engaged',
-        'Genuine casual agreement'
-      ],
-      defaultLevel: 1
-    },
-    'whatever': {
-      interpretations: [
-        'They\'ve given up on this conversation',
-        'Maximum frustration in one word',
-        'You\'ve officially annoyed them',
-        'They\'re done arguing (you didn\'t win)',
-        'Emotional shutdown initiated',
-        'They literally don\'t care anymore'
-      ],
-      defaultLevel: 3
-    },
-    'nice': {
-      interpretations: [
-        'Could be sarcastic, probably is',
-        'They\'re impressed but won\'t show it',
-        'Polite acknowledgment, zero enthusiasm',
-        'They\'re jealous and hiding it',
-        'Genuine compliment (check context)',
-        'Conversation filler word'
-      ],
-      defaultLevel: 1
-    },
-    'cool': {
-      interpretations: [
-        'They\'re not impressed at all',
-        'Bare minimum acknowledgment',
-        'They\'re doing something else',
-        'Polite disinterest',
-        'They forgot what you said',
-        'Actually thinks it\'s cool (rare)'
-      ],
-      defaultLevel: 1
-    },
-    'wow': {
-      interpretations: [
-        'Sarcasm detected',
-        'They\'re genuinely surprised',
-        'Passive-aggressive amazement',
-        'They have no words (bad sign)',
-        'Impressed but won\'t admit it',
-        'Buying time to think of a response'
-      ],
-      defaultLevel: 1
-    },
-    'nothing': {
-      interpretations: [
-        'Definitely something, probably big',
-        'They want you to ask again',
-        'Emotional trap activated',
-        'Everything is wrong but they won\'t say',
-        'Testing if you actually care',
-        'Literally nothing (1% chance)'
-      ],
-      defaultLevel: 2
-    },
-    'idk': {
-      interpretations: [
-        'They know, but don\'t want to say',
-        'Avoiding responsibility',
-        'They genuinely don\'t know',
-        'Don\'t want to make the decision',
-        'Passive way of saying "you decide"',
-        'Conversation escape route'
-      ],
-      defaultLevel: 1
-    },
-    'maybe': {
-      interpretations: [
-        'Soft no disguised as possibility',
-        'They\'re keeping options open (not you)',
-        'Commitment-phobic response',
-        'Polite rejection incoming',
-        'They need more information',
-        'Genuine uncertainty'
-      ],
-      defaultLevel: 2
-    }
+  const messages = {
+    ok: ['They\'re definitely not okay', 'Passive-aggressive detected', 'They\'re busy', 'Upset but hiding it', 'Genuine (rare)', 'Barely reading'],
+    k: ['Maximum passive-aggression', 'Furious but short', 'You\'re in trouble', '1 letter = 1% caring', 'Conversation over', 'Driving and texting'],
+    fine: ['Nothing is fine', 'Holding back a rant', 'Apologize now', 'Testing you', 'Maximum sarcasm', 'Genuine (0.01% chance)'],
+    sure: ['Don\'t actually want to', 'Reluctant agreement', 'Internally screaming', 'Forgot and playing along', 'Check for fever', 'Complaining later'],
+    lol: ['Didn\'t actually laugh', 'Awkward filler', 'No idea how to respond', 'Pity laugh', 'Ending conversation', 'Genuine (rare)'],
+    haha: ['Fake laugh', 'Not amused', 'Life support', 'Already gone', 'Sympathy laugh', 'Maybe smiling'],
+    yeah: ['Unenthusiastic', 'Distracted', 'Minimal effort', 'Don\'t care', 'Auto-pilot', 'Casual agreement'],
+    whatever: ['Given up', 'Maximum frustration', 'Officially annoyed', 'Done arguing', 'Emotional shutdown', 'Don\'t care anymore'],
+    nice: ['Probably sarcastic', 'Won\'t show it', 'Zero enthusiasm', 'Hiding jealousy', 'Check context', 'Filler word'],
+    cool: ['Not impressed', 'Bare minimum', 'Doing something else', 'Polite disinterest', 'Forgot already', 'Actually cool (rare)'],
+    wow: ['Sarcasm detected', 'Genuinely surprised', 'Passive-aggressive', 'No words (bad)', 'Won\'t admit it', 'Buying time'],
+    nothing: ['Definitely something', 'Want you to ask', 'Emotional trap', 'Won\'t say it', 'Testing you', 'Literally nothing (1%)'],
+    idk: ['Know but won\'t say', 'Avoiding responsibility', 'Genuinely don\'t know', 'Won\'t decide', 'You decide', 'Escape route'],
+    maybe: ['Soft no', 'Keeping options open', 'Commitment-phobic', 'Polite rejection', 'Need more info', 'Genuine uncertainty']
   }
 
-  // Overthinking levels with emojis
-  // Level 0 = Calm, Level 3 = Panic Mode
   const levels = [
-    { text: 'Calm', emoji: '😌' },
-    { text: 'Slightly Concerned', emoji: '🤔' },
-    { text: 'Overthinking', emoji: '😬' },
-    { text: 'Panic Mode', emoji: '😱' }
+    { text: 'Calm', emoji: '😌', color: '#4ecdc4' },
+    { text: 'Slightly Concerned', emoji: '🤔', color: '#ffd93d' },
+    { text: 'Overthinking', emoji: '😬', color: '#ff9a3c' },
+    { text: 'Panic Mode', emoji: '😱', color: '#ff6b6b' }
   ]
 
-  // Generate dynamic interpretations based on message characteristics
-  const generateDynamicInterpretations = (msg) => {
-    const lowerMsg = msg.toLowerCase().trim()
-    const interpretations = []
-    
-    // Analyze message characteristics
-    const hasExclamation = msg.includes('!')
-    const hasQuestion = msg.includes('?')
-    const hasEllipsis = msg.includes('...')
-    const isAllCaps = msg === msg.toUpperCase() && msg !== msg.toLowerCase()
-    const hasEmoji = /[\u{1F300}-\u{1F9FF}]/u.test(msg)
-    const wordCount = msg.trim().split(/\s+/).length
-    const hasPunctuation = /[.,!?;:]/.test(msg)
-    
-    // Generate contextual interpretations
-    if (hasExclamation) {
-      interpretations.push(`The exclamation mark in "${msg}" could mean excitement... or sarcasm`)
-      interpretations.push(`They're either really happy or really angry about "${msg}"`)
+  const tips = [
+    "💡 Short messages aren't always bad!",
+    "💡 Context matters more than words",
+    "💡 Sometimes 'ok' just means ok",
+    "💡 Not everything needs analysis",
+    "💡 Trust your gut, not overthinking"
+  ]
+
+  useEffect(() => {
+    const timer = setInterval(() => setTipIndex(i => (i + 1) % tips.length), 8000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const generateInterpretations = (msg) => {
+    const checks = {
+      exclaim: msg.includes('!'),
+      question: msg.includes('?'),
+      ellipsis: msg.includes('...'),
+      caps: msg === msg.toUpperCase() && msg !== msg.toLowerCase(),
+      emoji: /[\u{1F300}-\u{1F9FF}]/u.test(msg),
+      oneWord: msg.trim().split(/\s+/).length === 1,
+      long: msg.trim().split(/\s+/).length > 5,
+      noPunct: !/[.,!?;:]/.test(msg) && msg.trim().split(/\s+/).length > 1
     }
+
+    const interps = []
+    if (checks.exclaim) interps.push(`"${msg}" could mean excitement... or sarcasm`, `Either happy or angry about "${msg}"`)
+    if (checks.question) interps.push(`"${msg}" - genuine or rhetorical?`, `Testing if you're paying attention`)
+    if (checks.ellipsis) interps.push(`Dots in "${msg}" mean holding back`, `More they're not saying`)
+    if (checks.caps) interps.push(`ALL CAPS "${msg}" = yelling or stuck caps`, `Intensity is concerning`)
+    if (checks.emoji) interps.push(`Emoji masking true feelings`, `Softening harsh message?`)
+    if (checks.oneWord) interps.push(`One word = minimal effort`, `Couldn't spare more words?`)
+    if (checks.long) interps.push(`"${msg}" suspiciously detailed`, `They're overthinking too`)
+    if (checks.noPunct) interps.push(`No punctuation = casual or rushed`, `They're distracted`)
     
-    if (hasQuestion) {
-      interpretations.push(`"${msg}" - Are they genuinely asking or being rhetorical?`)
-      interpretations.push(`This question might be a test to see if you're paying attention`)
-    }
+    interps.push(`"${msg}" means what it says (unlikely)`, `Timing is suspicious`, `Definitely thinking something else`, `Anyone's guess really`)
     
-    if (hasEllipsis) {
-      interpretations.push(`Those dots in "${msg}" mean they're holding something back`)
-      interpretations.push(`The ellipsis suggests there's more they're not saying`)
-    }
-    
-    if (isAllCaps) {
-      interpretations.push(`ALL CAPS "${msg}" = they're either yelling or their caps lock is stuck`)
-      interpretations.push(`The intensity of "${msg}" in caps is concerning`)
-    }
-    
-    if (hasEmoji) {
-      interpretations.push(`The emoji in "${msg}" might be masking their true feelings`)
-      interpretations.push(`Are they using emojis to soften a harsh message?`)
-    }
-    
-    if (wordCount === 1) {
-      interpretations.push(`One word "${msg}" = minimal effort or maximum passive-aggression`)
-      interpretations.push(`They couldn't spare more than one word for "${msg}"?`)
-    }
-    
-    if (wordCount > 5) {
-      interpretations.push(`"${msg}" is suspiciously detailed - what are they overcompensating for?`)
-      interpretations.push(`The length of "${msg}" suggests they're overthinking too`)
-    }
-    
-    if (!hasPunctuation && wordCount > 1) {
-      interpretations.push(`No punctuation in "${msg}" - they're too casual or too rushed?`)
-      interpretations.push(`The lack of punctuation suggests they're distracted`)
-    }
-    
-    // Add message-specific interpretations
-    interpretations.push(`"${msg}" could mean exactly what it says (unlikely)`)
-    interpretations.push(`The timing of "${msg}" is suspicious`)
-    interpretations.push(`"${msg}" - they're definitely thinking something else`)
-    interpretations.push(`What they really mean by "${msg}" is anyone's guess`)
-    interpretations.push(`"${msg}" has layers you haven't even discovered yet`)
-    interpretations.push(`The subtext of "${msg}" requires a PhD to decode`)
-    
-    // Shuffle and return 4 unique interpretations
-    return [...new Set(interpretations)].sort(() => Math.random() - 0.5).slice(0, 4)
+    return [...new Set(interps)].sort(() => Math.random() - 0.5).slice(0, 4)
   }
 
-  // Main analysis function - triggered when user clicks analyze
   const analyze = () => {
-    // Don't analyze empty messages
     if (!message.trim()) return
-    
-    // Show loading state
     setIsAnalyzing(true)
     
-    // Simulate analysis delay for dramatic effect (1.5 seconds)
     setTimeout(() => {
-      const lowerMessage = message.toLowerCase().trim()
-      let selectedInterpretations = []
-      let levelIndex = 0
-
-      // Check if the message matches any known patterns
-      const matchedPattern = Object.keys(messageDatabase).find(key => 
-        lowerMessage === key || lowerMessage.includes(key)
-      )
-
-      if (matchedPattern) {
-        // Message found in database - use specific interpretations
-        const data = messageDatabase[matchedPattern]
-        // Shuffle interpretations and pick 4 random ones
-        const shuffled = [...data.interpretations].sort(() => Math.random() - 0.5)
-        selectedInterpretations = shuffled.slice(0, 4)
-        levelIndex = data.defaultLevel
+      const lower = message.toLowerCase().trim()
+      const matched = Object.keys(messages).find(k => lower === k || lower.includes(k))
+      
+      let interps, levelIdx
+      if (matched) {
+        interps = [...messages[matched]].sort(() => Math.random() - 0.5).slice(0, 4)
+        levelIdx = matched === 'fine' || matched === 'k' || matched === 'whatever' ? 3 : matched === 'ok' || matched === 'sure' || matched === 'nothing' || matched === 'maybe' ? 2 : 1
       } else {
-        // Unknown message - generate dynamic interpretations
-        selectedInterpretations = generateDynamicInterpretations(message)
-        
-        // Calculate level based on message characteristics
-        const hasExclamation = message.includes('!')
-        const hasQuestion = message.includes('?')
-        const hasEllipsis = message.includes('...')
-        const isAllCaps = message === message.toUpperCase() && message !== message.toLowerCase()
-        const wordCount = message.trim().split(/\s+/).length
-        
-        // Determine overthinking level
-        if (isAllCaps || hasEllipsis) levelIndex = 3
-        else if (hasExclamation || wordCount === 1) levelIndex = 2
-        else if (hasQuestion || wordCount > 5) levelIndex = 1
-        else levelIndex = 1
+        interps = generateInterpretations(message)
+        const caps = message === message.toUpperCase() && message !== message.toLowerCase()
+        const ellipsis = message.includes('...')
+        const exclaim = message.includes('!')
+        const oneWord = message.trim().split(/\s+/).length === 1
+        levelIdx = caps || ellipsis ? 3 : exclaim || oneWord ? 2 : 1
       }
 
-      // Add some randomness to the level (30% chance to increase by 1)
-      levelIndex = Math.min(Math.max(levelIndex + (Math.random() > 0.7 ? 1 : 0), 0), 3)
+      levelIdx = Math.min(levelIdx + (Math.random() > 0.7 ? 1 : 0), 3)
+      const level = levels[levelIdx]
       
-      const level = levels[levelIndex]
-      
-      // Store the result
-      setResult({ 
-        interpretations: selectedInterpretations, 
-        level
-      })
-      
-      // Add to history (keep only last 5 analyses)
-      setHistory(prev => [{
-        message,
-        level: level.text
-      }, ...prev.slice(0, 4)])
-      
-      // Hide loading state
+      setResult({ interpretations: interps, level })
+      setHistory(prev => [{ message, level: level.text }, ...prev.slice(0, 4)])
+      setStats(prev => ({ total: prev.total + 1, panic: prev.panic + (levelIdx === 3 ? 1 : 0) }))
       setIsAnalyzing(false)
     }, 1500)
   }
 
-  // Reset function - clear everything and start fresh
-  const reset = () => {
-    setMessage('')
-    setResult(null)
+  const advice = {
+    'Panic Mode': 'Take a deep breath. It\'s probably fine. Maybe.',
+    'Overthinking': 'You\'re reading too much into this. Or are you?',
+    'Slightly Concerned': 'A healthy amount of analysis. Keep it balanced!',
+    'Calm': 'You\'re zen. Teach us your ways!'
   }
-
-  // Quick example messages for users to try
-  const examples = ['ok', 'fine', 'k', 'sure', 'whatever', 'lol']
 
   return (
     <main>
       <div className="container">
-        {/* Header Section */}
         <div className="header-section">
           <h1> Overthinking Message Analyzer</h1>
           <p className="description">
@@ -330,109 +122,102 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Input Section */}
+        <div className="tip-banner">{tips[tipIndex]}</div>
+
+        {stats.total > 0 && (
+          <div className="stats-bar">
+            <div className="stat-item">
+              <span className="stat-label">Total Analyses:</span>
+              <span className="stat-value">{stats.total}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Panic Modes:</span>
+              <span className="stat-value panic">{stats.panic}</span>
+            </div>
+          </div>
+        )}
+
         <div className="input-section">
-          <input
-            type="text"
-            placeholder='Enter a message (e.g., "ok", "fine", "sure")'
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && !isAnalyzing && analyze()}
-            disabled={isAnalyzing}
-          />
-          <button 
-            onClick={analyze} 
-            disabled={isAnalyzing || !message.trim()}
-            className={isAnalyzing ? 'analyzing' : ''}
-          >
-            {isAnalyzing ? (
-              <>
-                <span className="spinner"></span>
-                Analyzing...
-              </>
-            ) : (
-              'Analyze Message'
-            )}
+          <div className="input-wrapper">
+            <input
+              type="text"
+              placeholder='Enter a message (e.g., "ok", "fine", "sure")'
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && !isAnalyzing && analyze()}
+              disabled={isAnalyzing}
+              maxLength={100}
+            />
+            <span className="char-counter">{message.length}/100</span>
+          </div>
+          <button onClick={analyze} disabled={isAnalyzing || !message.trim()} className={isAnalyzing ? 'analyzing' : ''}>
+            {isAnalyzing ? <><span className="spinner"></span>Analyzing...</> : '🔍 Analyze Message'}
           </button>
         </div>
 
-        {/* Example Messages Section */}
-        <div className="examples">
-          <p>Try these examples:</p>
-          <div className="example-buttons">
-            {examples.map((example, i) => (
-              <button 
-                key={i} 
-                onClick={() => setMessage(example)}
-                className="example-btn"
-                disabled={isAnalyzing}
-              >
-                "{example}"
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Results Section - Only shown after analysis */}
         {result && (
           <div className="result-card">
-            {/* Header with title */}
-            <div className="result-header">
-              <h2>Analysis Complete</h2>
+            <div className="ai-character-header">
+              <div className="character-avatar-large">
+                <div className="avatar-circle">
+                  <span className="robot-face">🤖</span>
+                  <div className="pulse-ring"></div>
+                </div>
+              </div>
+              <div className="character-details">
+                <h2>Dr. Overthink AI</h2>
+                <p className="character-subtitle">Advanced Message Analysis System</p>
+                <span className="status-badge">● Online & Analyzing</span>
+              </div>
+            </div>
+
+            <div className="ai-message-box">
+              <div className="ai-says">
+                <span className="ai-label">🤖 AI Analysis:</span>
+                <p className="ai-speech">I've analyzed your message <strong>"{message}"</strong> and here's what I found...</p>
+              </div>
             </div>
             
-            {/* Display the message that was analyzed */}
-            <div className="message-display">
-              <strong>Message Received:</strong> 
-              <span className="message-text">"{message}"</span>
-            </div>
-            
-            {/* List of possible interpretations */}
             <div className="interpretations">
-              <h3>Possible Interpretations:</h3>
+              <h3>🧠 My Interpretations:</h3>
               <ul>
                 {result.interpretations.map((interp, i) => (
                   <li key={i} style={{ animationDelay: `${i * 0.1}s` }}>
-                    <span className="bullet">•</span>
-                    {interp}
+                    <span className="ai-bullet">🤖</span>
+                    <span className="interp-text">{interp}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Overthinking level badge */}
             <div className="level">
-              <h3> Overthinking Level:</h3>
-              <div className="level-badge">
+              <h3>📊 Overthinking Level Detected:</h3>
+              <div className="level-badge" style={{ borderColor: result.level.color }}>
                 <span className="level-emoji">{result.level.emoji}</span>
-                <span className="level-text">{result.level.text}</span>
+                <span className="level-text" style={{ color: result.level.color }}>{result.level.text}</span>
               </div>
             </div>
 
-            {/* Contextual advice based on overthinking level */}
-            <div className="advice">
-              <p> <strong>Pro Tip:</strong> {
-                result.level.text === 'Panic Mode' 
-                  ? 'Take a deep breath. It\'s probably fine. Maybe.'
-                  : result.level.text === 'Overthinking'
-                  ? 'You\'re reading too much into this. Or are you?'
-                  : result.level.text === 'Slightly Concerned'
-                  ? 'A healthy amount of analysis. Keep it balanced!'
-                  : 'You\'re zen. Teach us your ways!'
-              }</p>
+            <div className="ai-advice-box">
+              <div className="ai-avatar-circle">🤖</div>
+              <div className="advice-content">
+                <strong>Dr. Overthink's Advice:</strong>
+                <p>{advice[result.level.text]}</p>
+              </div>
             </div>
 
-            {/* Reset button to analyze another message */}
-            <button onClick={reset} className="reset-btn">
-              Analyze Another Message
+            <button onClick={() => { setMessage(''); setResult(null); }} className="reset-btn">
+              🔄 Analyze Another Message
             </button>
           </div>
         )}
 
-        {/* History Section - Shows last 5 analyses */}
         {history.length > 0 && (
           <div className="history-section">
-            <h3> Recent Analyses</h3>
+            <div className="history-header">
+              <h3>📜 Recent Analyses</h3>
+              <button onClick={() => { setHistory([]); setStats({ total: 0, panic: 0 }); }} className="clear-btn">Clear</button>
+            </div>
             <div className="history-list">
               {history.map((item, i) => (
                 <div key={i} className="history-item">
@@ -444,7 +229,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* Footer with disclaimer */}
         <div className="footer">
           <p>⚠️ Disclaimer: This is a satirical tool. No actual AI or psychology involved—just pure overthinking simulation!</p>
         </div>

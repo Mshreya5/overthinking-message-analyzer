@@ -1,23 +1,3 @@
-/* ============================================
-   OVERTHINKING MESSAGE ANALYZER - STYLES
-   ============================================
-   
-   This stylesheet contains all the styling for the application.
-   It's organized into logical sections for easy navigation.
-   
-   Color Scheme:
-   - Primary: Teal (#4ecdc4) - Main accent color
-   - Secondary: Red (#ff6b6b) - Highlights and accents
-   - Background: Dark Blue (#1a1a2e) - Main background
-   - Cards: Dark Navy (#0f1624) - Card backgrounds
-   - Text: White with varying opacity
-   
-   ============================================ */
-
-/* ============================================
-   RESET & BASE STYLES
-   ============================================ */
-
 * {
   margin: 0;
   padding: 0;
@@ -26,7 +6,7 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: #1a1a2e;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   color: #fff;
   min-height: 100vh;
   display: flex;
@@ -48,12 +28,8 @@ main {
   text-align: center;
 }
 
-/* ============================================
-   HEADER SECTION
-   ============================================ */
-
 .header-section {
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
   animation: fadeInDown 0.8s ease-out;
 }
 
@@ -83,9 +59,60 @@ h1 {
   font-size: 1.05rem;
 }
 
-/* ============================================
-   INPUT SECTION
-   ============================================ */
+.tip-banner {
+  background: linear-gradient(135deg, #4ecdc4 0%, #44a6a0 100%);
+  color: #1a1a2e;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  animation: slideInDown 0.5s ease-out;
+  box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stats-bar {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.stat-item {
+  background: #0f1624;
+  border: 2px solid #2d3561;
+  border-radius: 12px;
+  padding: 0.8rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.stat-label {
+  color: #9c9db8;
+  font-size: 0.85rem;
+}
+
+.stat-value {
+  color: #4ecdc4;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.stat-value.panic {
+  color: #ff6b6b;
+}
 
 .input-section {
   display: flex;
@@ -106,9 +133,13 @@ h1 {
   }
 }
 
-/* Input field styling */
+.input-wrapper {
+  position: relative;
+}
+
 input {
-  padding: 1.2rem 1.5rem;
+  width: 100%;
+  padding: 1.2rem 5rem 1.2rem 1.5rem;
   font-size: 1.05rem;
   border: 2px solid #2d3561;
   border-radius: 12px;
@@ -119,7 +150,6 @@ input {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Input focus state - highlight with teal border */
 input:focus {
   border-color: #4ecdc4;
   box-shadow: 0 4px 30px rgba(78, 205, 196, 0.3);
@@ -135,9 +165,18 @@ input:disabled {
   cursor: not-allowed;
 }
 
-/* ============================================
-   BUTTON STYLES
-   ============================================ */
+.char-counter {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7c7d9c;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #1a1a2e;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+}
 
 button {
   padding: 1.2rem 2.5rem;
@@ -154,7 +193,6 @@ button {
   overflow: hidden;
 }
 
-/* Shimmer effect on button hover */
 button::before {
   content: '';
   position: absolute;
@@ -170,7 +208,6 @@ button:hover::before {
   left: 100%;
 }
 
-/* Button hover state - lift up and increase shadow */
 button:hover:not(:disabled) {
   transform: translateY(-3px);
   box-shadow: 0 12px 35px rgba(78, 205, 196, 0.5);
@@ -186,7 +223,6 @@ button:disabled {
   transform: none;
 }
 
-/* Analyzing state - pulse animation */
 .analyzing {
   background: #4ecdc4;
   animation: pulse 1.5s ease-in-out infinite;
@@ -197,7 +233,6 @@ button:disabled {
   50% { opacity: 0.8; }
 }
 
-/* Loading spinner */
 .spinner {
   display: inline-block;
   width: 14px;
@@ -212,10 +247,6 @@ button:disabled {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
-
-/* ============================================
-   EXAMPLES SECTION
-   ============================================ */
 
 .examples {
   margin-bottom: 2rem;
@@ -235,7 +266,6 @@ button:disabled {
   justify-content: center;
 }
 
-/* Example button styling */
 .example-btn {
   padding: 0.6rem 1.2rem;
   font-size: 0.9rem;
@@ -253,10 +283,6 @@ button:disabled {
   box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
 }
 
-/* ============================================
-   RESULT CARD SECTION
-   ============================================ */
-
 .result-card {
   background: #0f1624;
   border: 2px solid #2d3561;
@@ -268,7 +294,6 @@ button:disabled {
   margin-bottom: 2rem;
 }
 
-/* Scale-in animation for result card */
 @keyframes scaleIn {
   from {
     opacity: 0;
@@ -280,24 +305,160 @@ button:disabled {
   }
 }
 
-.result-header {
+.ai-character-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
   border-bottom: 2px solid #2d3561;
 }
 
-.result-card h2 {
-  color: #4ecdc4;
-  margin: 0;
-  font-size: 1.5rem;
+.character-avatar-large {
+  position: relative;
 }
 
-/* ============================================
-   MESSAGE DISPLAY
-   ============================================ */
+.avatar-circle {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #4ecdc4 0%, #44a6a0 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+}
+
+.robot-face {
+  font-size: 3rem;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.pulse-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 3px solid #4ecdc4;
+  border-radius: 50%;
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+.character-details {
+  flex: 1;
+}
+
+.character-details h2 {
+  color: #4ecdc4;
+  margin: 0 0 0.3rem 0;
+  font-size: 1.8rem;
+}
+
+.character-subtitle {
+  color: #9c9db8;
+  font-size: 0.9rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.status-badge {
+  display: inline-block;
+  color: #4ecdc4;
+  font-size: 0.85rem;
+  font-weight: 600;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.ai-message-box {
+  background: linear-gradient(135deg, #2d3561 0%, #1a1a2e 100%);
+  border: 2px solid #4ecdc4;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  animation: slideInLeft 0.5s ease-out;
+}
+
+.ai-says {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.ai-label {
+  color: #4ecdc4;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.ai-speech {
+  color: #e0e1f5;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.ai-speech strong {
+  color: #ff6b6b;
+}
+
+.ai-bullet {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.ai-advice-box {
+  background: linear-gradient(135deg, #2d3561 0%, #1a1a2e 100%);
+  border: 2px solid #4ecdc4;
+  padding: 1.2rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  animation: fadeIn 0.5s ease-out 0.6s both;
+}
+
+.ai-avatar-circle {
+  font-size: 2rem;
+  flex-shrink: 0;
+  animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.advice-content {
+  flex: 1;
+}
+
+.advice-content strong {
+  color: #4ecdc4;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.advice-content p {
+  margin: 0;
+  color: #e0e1f5;
+  line-height: 1.6;
+}
 
 .message-display {
   background: #1a1a2e;
@@ -326,10 +487,6 @@ button:disabled {
   font-size: 1.1rem;
 }
 
-/* ============================================
-   INTERPRETATIONS SECTION
-   ============================================ */
-
 .interpretations h3,
 .level h3 {
   color: #4ecdc4;
@@ -348,7 +505,6 @@ button:disabled {
   list-style: none;
 }
 
-/* Individual interpretation item */
 .interpretations li {
   background: #1a1a2e;
   padding: 1rem 1.2rem;
@@ -378,10 +534,9 @@ button:disabled {
   transform: translateX(5px);
 }
 
-.bullet {
-  color: #ff6b6b;
-  font-size: 1.5rem;
-  line-height: 1;
+.interp-text {
+  flex: 1;
+  line-height: 1.5;
 }
 
 .level {
@@ -401,11 +556,9 @@ button:disabled {
   animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s both;
   transition: transform 0.3s ease;
   background: #2d3561;
-  color: #4ecdc4;
-  border: 2px solid #4ecdc4;
+  border: 2px solid;
 }
 
-/* Floating emoji animation */
 .level-emoji {
   font-size: 2rem;
   animation: float 2s ease-in-out infinite;
@@ -416,33 +569,7 @@ button:disabled {
   50% { transform: translateY(-10px); }
 }
 
-/* ============================================
-   ADVICE SECTION
-   ============================================ */
 
-.advice {
-  background: #2d3561;
-  border: 1px solid #4ecdc4;
-  padding: 1rem 1.2rem;
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
-  animation: fadeIn 0.5s ease-out 0.6s both;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.advice p {
-  margin: 0;
-  color: #e0e1f5;
-  line-height: 1.6;
-}
-
-/* ============================================
-   RESET BUTTON
-   ============================================ */
 
 .reset-btn {
   width: 100%;
@@ -457,10 +584,6 @@ button:disabled {
   color: #1a1a2e;
 }
 
-/* ============================================
-   HISTORY SECTION
-   ============================================ */
-
 .history-section {
   background: #0f1624;
   border: 2px solid #2d3561;
@@ -470,11 +593,31 @@ button:disabled {
   animation: fadeInUp 0.6s ease-out;
 }
 
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
 .history-section h3 {
   color: #4ecdc4;
-  margin-bottom: 1rem;
+  margin: 0;
   font-size: 1.1rem;
-  text-align: center;
+}
+
+.clear-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  background: #ff6b6b;
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.clear-btn:hover {
+  background: #ff5252;
+  transform: translateY(-2px);
 }
 
 .history-list {
@@ -511,10 +654,6 @@ button:disabled {
   border-radius: 6px;
 }
 
-/* ============================================
-   FOOTER SECTION
-   ============================================ */
-
 .footer {
   text-align: center;
   margin-top: 2rem;
@@ -531,10 +670,6 @@ button:disabled {
   line-height: 1.6;
   margin: 0;
 }
-
-/* ============================================
-   RESPONSIVE DESIGN
-   ============================================ */
 
 @media (max-width: 600px) {
   h1 {
@@ -570,13 +705,16 @@ button:disabled {
     align-items: flex-start;
     gap: 0.5rem;
   }
+
+  .stats-bar {
+    flex-direction: column;
+  }
+
+  input {
+    padding-right: 4rem;
+  }
 }
 
-/* ============================================
-   ACCESSIBILITY
-   ============================================ */
-
-/* Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
