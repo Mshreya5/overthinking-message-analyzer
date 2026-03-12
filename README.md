@@ -208,7 +208,7 @@ This project is optimized for **Vercel** deployment:
 
 1. Push code to GitHub
 2. Go to [vercel.com]
-Vercel link: (overthinking-message-analyzer.vercel.app)
+Vercel link: (https://overthinking-message-analyzer.vercel.app/)
 3. Import your repository
 4. Click Deploy
 5. Done!
