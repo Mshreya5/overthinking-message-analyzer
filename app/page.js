@@ -67,20 +67,20 @@ export default function Home() {
     if (checks.oneWord) interps.push(`One word = minimal effort`, `Couldn't spare more words?`)
     if (checks.long) interps.push(`"${msg}" suspiciously detailed`, `They're overthinking too`)
     if (checks.noPunct) interps.push(`No punctuation = casual or rushed`, `They're distracted`)
-    
+
     interps.push(`"${msg}" means what it says (unlikely)`, `Timing is suspicious`, `Definitely thinking something else`, `Anyone's guess really`)
-    
+
     return [...new Set(interps)].sort(() => Math.random() - 0.5).slice(0, 4)
   }
 
   const analyze = () => {
     if (!message.trim()) return
     setIsAnalyzing(true)
-    
+
     setTimeout(() => {
       const lower = message.toLowerCase().trim()
       const matched = Object.keys(messages).find(k => lower === k || lower.includes(k))
-      
+
       let interps, levelIdx
       if (matched) {
         interps = [...messages[matched]].sort(() => Math.random() - 0.5).slice(0, 4)
@@ -96,7 +96,7 @@ export default function Home() {
 
       levelIdx = Math.min(levelIdx + (Math.random() > 0.7 ? 1 : 0), 3)
       const level = levels[levelIdx]
-      
+
       setResult({ interpretations: interps, level })
       setHistory(prev => [{ message, level: level.text }, ...prev.slice(0, 4)])
       setStats(prev => ({ total: prev.total + 1, panic: prev.panic + (levelIdx === 3 ? 1 : 0) }))
@@ -115,7 +115,7 @@ export default function Home() {
     <main>
       <div className="container">
         <div className="header-section">
-          <h1> Overthinking Message Analyzer</h1>
+          <h1>🧠 Overthinking Message Analyzer</h1>
           <p className="description">
             Ever received a short message and spent the next hour analyzing it? 
             You're not alone. Let's scientifically measure your overthinking level!
@@ -141,17 +141,24 @@ export default function Home() {
           <div className="input-wrapper">
             <input
               type="text"
-              placeholder='Enter a message (e.g., "ok", "fine", "sure")'
+              placeholder='Type a message like "ok", "fine"...'
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && !isAnalyzing && analyze()}
+              onKeyDown={(e) => e.key === 'Enter' && !isAnalyzing && analyze()}  // ✅ FIXED
               disabled={isAnalyzing}
               maxLength={100}
             />
             <span className="char-counter">{message.length}/100</span>
           </div>
-          <button onClick={analyze} disabled={isAnalyzing || !message.trim()} className={isAnalyzing ? 'analyzing' : ''}>
-            {isAnalyzing ? <><span className="spinner"></span>Analyzing...</> : '🔍 Analyze Message'}
+
+          <button 
+            onClick={analyze} 
+            disabled={isAnalyzing || !message.trim()} 
+            className={isAnalyzing ? 'analyzing' : ''}
+          >
+            {isAnalyzing 
+              ? <><span className="spinner"></span> Analyzing...</> 
+              : '🔍 Analyze'}
           </button>
         </div>
 
@@ -177,7 +184,7 @@ export default function Home() {
                 <p className="ai-speech">I've analyzed your message <strong>"{message}"</strong> and here's what I found...</p>
               </div>
             </div>
-            
+
             <div className="interpretations">
               <h3>🧠 My Interpretations:</h3>
               <ul>
@@ -206,8 +213,11 @@ export default function Home() {
               </div>
             </div>
 
-            <button onClick={() => { setMessage(''); setResult(null); }} className="reset-btn">
-              🔄 Analyze Another Message
+            <button 
+              onClick={() => { setMessage(''); setResult(null); }} 
+              className="reset-btn"
+            >
+              🔄 Try Another Message
             </button>
           </div>
         )}
@@ -216,7 +226,12 @@ export default function Home() {
           <div className="history-section">
             <div className="history-header">
               <h3>📜 Recent Analyses</h3>
-              <button onClick={() => { setHistory([]); setStats({ total: 0, panic: 0 }); }} className="clear-btn">Clear</button>
+              <button 
+                onClick={() => { setHistory([]); setStats({ total: 0, panic: 0 }); }} 
+                className="clear-btn"
+              >
+                Clear
+              </button>
             </div>
             <div className="history-list">
               {history.map((item, i) => (
